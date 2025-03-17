@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Address Matcher Flowchart</title>
+    <!-- Load Mermaid -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .instructions {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border: 1px solid #b0e0e6;
+            border-radius: 5px;
+        }
+        .download-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+        .mermaid {
+            margin: 30px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Address Matcher Scoring Logic Flowchart</h1>
+        
+        <div class="instructions">
+            <p><strong>Instructions:</strong> The flowchart below shows the address matching scoring logic. Use the button below to save it as an image.</p>
+        </div>
+        
+        <button id="download-btn" class="download-btn">Save as PNG</button>
+        
+        <div class="mermaid">
+flowchart TD
+    Start([Start]) --> Preprocess[Preprocess addresses]
+    Preprocess --> Extract[Extract address components]
+    
+    Extract --> PincodeCheck{Calculate Pincode Similarity}
+    Extract --> FullText[Calculate Full Text Similarity]
+    Extract --> Components[Calculate Component Similarity]
+    
+    subgraph Pincode Similarity Logic
+        PincodeCheck --> ExactMatch{Exact Match?}
+        ExactMatch -->|Yes| Score1[Score = 1.0]
+        ExactMatch -->|No| SpaceCheck{Only differs by spaces/hyphens?}
+        SpaceCheck -->|Yes| Score1
+        SpaceCheck -->|No| DigitCheck{Differs by only one digit?}
+        DigitCheck -->|Yes| Score09[Score = 0.9]
+        DigitCheck -->|No| MissingCheck{One/both missing?}
+        MissingCheck -->|Yes| Score05[Score = 0.5]
+        MissingCheck -->|No| Score0[Score = 0.0]
+    end
+    
+    subgraph Component Similarity Logic
+        Components --> ThaneCheck{Thane/Kalyan-Dombivali match?}
+        ThaneCheck -->|Yes| AddThaneScore[Add city score = 0.8]
+        ThaneCheck -->|No| FlatCheck{Flat number check}
+        
+        FlatCheck --> DigitMatch{Numeric part matches?}
+        DigitMatch -->|Yes| AddFlatScore[Add flat score = 0.9]
+        DigitMatch -->|No| PrefixMatch{Prefix match?}
+        PrefixMatch -->|Yes| AddFlatScore2[Add flat score = 0.8]
+        PrefixMatch -->|No| FuzzyFlat{Fuzzy match?}
+        FuzzyFlat -->|Yes| AddFlatScore3[Add flat score = 1.0]
+        
+        FlatCheck --> FloorCheck{Floor number check}
+        FloorCheck --> NumericMatch{Numeric part matches?}
+        NumericMatch -->|Yes| AddFloorScore[Add floor score = 1.0]
+        
+        FloorCheck --> StateCheck{State check}
+        StateCheck --> FuzzyState{Fuzzy match > 75%?}
+        FuzzyState -->|Yes| AddStateScore[Add state score = 1.0]
+        
+        StateCheck --> CityCheck{City check}
+        CityCheck --> VariationCheck{Known variation?}
+        VariationCheck -->|Yes| AddCityScore[Add city score = 1.0]
+        VariationCheck -->|No| FuzzyCity{Fuzzy match > 75%?}
+        FuzzyCity -->|Yes| AddCityScore
+        
+        CityCheck --> MoreComponents[Check district, locality, village, etc.]
+        MoreComponents --> SurveyCheck{Survey number matches?}
+        SurveyCheck -->|Yes| AddSurveyScore[Add survey bonus = 1.0]
+        
+        SurveyCheck --> CalcCompWeight[Calculate weighted component score]
+    end
+    
+    Score1 --> WeightedCalc
+    Score09 --> WeightedCalc
+    Score05 --> WeightedCalc
+    Score0 --> WeightedCalc
+    FullText --> WeightedCalc
+    CalcCompWeight --> WeightedCalc
+    
+    WeightedCalc[Calculate Weighted Score] --> FinalCalc["Final score = 
+    0.3 × Pincode + 
+    0.25 × FullText + 
+    0.45 × Component"]
+    
+    FinalCalc --> BoostCheck{Pincode > 0.8 AND 
+    Component > 0.6?}
+    BoostCheck -->|Yes| BoostScore["Apply 10% boost
+    (max 1.0)"]
+    BoostCheck -->|No| ThresholdCheck
+    
+    BoostScore --> ThresholdCheck{Score ≥ threshold?}
+    ThresholdCheck -->|Yes| Match[Return MATCH]
+    ThresholdCheck -->|No| NoMatch[Return NO MATCH]
+    
+    Match --> End([End])
+    NoMatch --> End
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            securityLevel: 'loose',
+            theme: 'default'
+        });
+        
+        // Handle download as PNG
+        document.getElementById('download-btn').addEventListener('click', function() {
+            const svg = document.querySelector('.mermaid svg');
+            
+            // Create a canvas from the SVG
+            const canvas = document.createElement('canvas');
+            const bbox = svg.getBBox();
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas dimensions based on SVG dimensions (with some padding)
+            const padding = 40;
+            canvas.width = bbox.width + padding * 2;
+            canvas.height = bbox.height + padding * 2;
+            
+            // Draw white background
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Create image from SVG
+            const data = new XMLSerializer().serializeToString(svg);
+            const img = new Image();
+            
+            img.onload = function() {
+                // Draw the image at the center of the canvas
+                ctx.drawImage(img, padding, padding, bbox.width, bbox.height);
+                
+                // Convert to data URL and trigger download
+                const dataUrl = canvas.toDataURL('image/png');
+                const a = document.createElement('a');
+                a.href = dataUrl;
+                a.download = 'address_matcher_flowchart.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+            
+            // Set source of image with the SVG XML
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(data);
+        });
+    </script>
+</body>
+</html> 
