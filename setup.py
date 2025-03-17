@@ -1,4 +1,10 @@
 from setuptools import setup, find_packages
+import os
+
+# Get the long description from the README file
+here = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 # Get requirements from file if it exists
 try:
@@ -23,8 +29,10 @@ except FileNotFoundError:
 
 setup(
     name="indian-address-matcher",
-    version="0.1.2",
+    version="0.1.3",
     description="A tool for matching Indian addresses to determine if they refer to the same location",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     author="Karan Choudhary",
     author_email="kchoudhary510199@gmail.com",
     packages=find_packages(),
@@ -35,6 +43,11 @@ setup(
         ],
     },
     url="https://github.com/Karan-Choudhary/indian-address-matcher",
+    project_urls={
+        "Bug Tracker": "https://github.com/Karan-Choudhary/indian-address-matcher/issues",
+        "Documentation": "https://github.com/Karan-Choudhary/indian-address-matcher#readme",
+        "Source Code": "https://github.com/Karan-Choudhary/indian-address-matcher",
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
