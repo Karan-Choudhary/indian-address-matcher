@@ -28,7 +28,7 @@ setup(
     description="A tool for matching Indian addresses to determine if they refer to the same location",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/your-github-username/indian-address-matcher",
+    url="https://github.com/Karan-Choudhary/indian-address-matcher",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

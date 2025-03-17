@@ -16,10 +16,10 @@ A Python library for matching Indian addresses to determine if they refer to the
 
 ```bash
 # Install directly from GitHub
-pip install git+https://github.com/your-github-username/indian-address-matcher.git
+pip install git+https://github.com/Karan-Choudhary/indian-address-matcher.git
 
 # Or clone and install from source
-git clone https://github.com/your-github-username/indian-address-matcher.git
+git clone https://github.com/Karan-Choudhary/indian-address-matcher.git
 cd indian-address-matcher
 pip install -e .
 ```
