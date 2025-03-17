@@ -29,7 +29,7 @@ except FileNotFoundError:
 
 setup(
     name="indian-address-matcher",
-    version="0.1.3",
+    version="0.1.4",
     description="A tool for matching Indian addresses to determine if they refer to the same location",
     long_description=long_description,
     long_description_content_type="text/markdown",
