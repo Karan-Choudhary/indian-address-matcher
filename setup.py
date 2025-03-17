@@ -1,10 +1,12 @@
 from setuptools import setup, find_packages
 
-setup(
-    name="indian-address-matcher",
-    version="0.1.1",
-    packages=find_packages(),
-    install_requires=[
+# Get requirements from file if it exists
+try:
+    with open('requirements.txt') as f:
+        requirements = f.read().splitlines()
+except FileNotFoundError:
+    # Fallback requirements if file is missing
+    requirements = [
         "fuzzywuzzy>=0.18.0",
         "python-Levenshtein>=0.12.2",
         "rapidfuzz>=2.13.7",
@@ -17,17 +19,21 @@ setup(
         "pandas>=2.0.2",
         "geopandas>=0.13.2",
         "geopy>=2.3.0",
-    ],
+    ]
+
+setup(
+    name="indian-address-matcher",
+    version="0.1.2",
+    description="A tool for matching Indian addresses to determine if they refer to the same location",
+    author="Karan Choudhary",
+    author_email="kchoudhary510199@gmail.com",
+    packages=find_packages(),
+    install_requires=requirements,
     entry_points={
         "console_scripts": [
             "address-matcher=address_matcher.cli:main",
         ],
     },
-    author="Karan",
-    author_email="your.email@example.com",
-    description="A tool for matching Indian addresses to determine if they refer to the same location",
-    long_description=open("README.md").read(),
-    long_description_content_type="text/markdown",
     url="https://github.com/Karan-Choudhary/indian-address-matcher",
     classifiers=[
         "Programming Language :: Python :: 3",
