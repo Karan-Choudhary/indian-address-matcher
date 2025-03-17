@@ -35,7 +35,7 @@ setup(
     long_description_content_type="text/markdown",
     author="Karan Choudhary",
     author_email="kchoudhary510199@gmail.com",
-    packages=find_packages(),
+    packages=['address_matcher', 'address_matcher.src'],
     install_requires=requirements,
     entry_points={
         "console_scripts": [

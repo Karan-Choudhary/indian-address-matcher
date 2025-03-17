@@ -6,8 +6,8 @@ import json
 from colorama import Fore, Style, init
 from tabulate import tabulate
 
-from .src.address_matcher import AddressMatcher
-from .src.utils import preprocess_address, extract_address_components
+from address_matcher.src.address_matcher import AddressMatcher
+from address_matcher.src.utils import preprocess_address, extract_address_components
 
 init()
 
